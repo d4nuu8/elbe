@@ -1,0 +1,46 @@
+# ELBE development container
+# Copyright (c) 2024 Daniel Braunwarth <daniel@braunwarth.dev>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+FROM debian:testing-slim
+
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV LC_ALL="en_US.UTF-8"
+
+RUN apt-get update --yes && apt-get install --yes --no-install-recommends \
+        bzip2 \
+        ca-certificates \
+        cpio \
+        curl \
+        git \
+        less \
+        libvirt-daemon-system \
+        locales \
+        make \
+        openssh-client \
+        python3 \
+        python3-debian \
+        python3-gpg \
+        python3-libvirt \
+        python3-lxml \
+        python3-mako \
+        python3-passlib \
+        python3-suds \
+        qemu-system-x86 \
+        qemu-utils \
+        rsync \
+        systemd \
+        vim \
+        wget \
+        zsh \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
+
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+    && sed -i "s/robbyrussell/gentoo/" /root/.zshrc
+
+RUN systemctl enable libvirtd.service
+
+ENTRYPOINT [ "/lib/systemd/systemd" ]
