@@ -1565,6 +1565,42 @@ SPDX-FileCopyrightText: Linutronix GmbH
     <attribute ref="xml:base"/>
   </complexType>
 
+  <complexType name="subvolume">
+    <annotation>
+      <documentation>
+         btrfs subvolume
+      </documentation>
+    </annotation>
+    <all>
+      <element name="name" type="rfs:string" minOccurs="1" maxOccurs="1">
+        <annotation>
+          <documentation>
+            subvolume [destination/]name
+          </documentation>
+        </annotation>
+      </element>
+    </all>
+    <attribute ref="xml:base"/>
+  </complexType>
+
+  <complexType name="subvolumes">
+    <annotation>
+      <documentation>
+         container for btrfs subvolumes
+      </documentation>
+    </annotation>
+    <sequence>
+      <element name="subvolume" type="rfs:subvolume" minOccurs="1" maxOccurs="unbounded">
+        <annotation>
+          <documentation>
+            btrfs subvolume
+          </documentation>
+        </annotation>
+      </element>
+    </sequence>
+    <attribute ref="xml:base"/>
+  </complexType>
+
   <complexType name="fs">
     <annotation>
       <documentation>
@@ -1597,6 +1633,13 @@ SPDX-FileCopyrightText: Linutronix GmbH
         <annotation>
           <documentation>
             passno order for fsck
+          </documentation>
+        </annotation>
+      </element>
+      <element name="subvolumes" type="rfs:subvolumes" minOccurs="0" maxOccurs="1">
+        <annotation>
+          <documentation>
+            btrfs subvolumes to be created
           </documentation>
         </annotation>
       </element>
