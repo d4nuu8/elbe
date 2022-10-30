@@ -10,6 +10,8 @@
 import logging
 import os
 
+from pathlib import Path
+
 import parted
 import _ped
 
@@ -367,12 +369,18 @@ def create_label(disk, part, ppart, fslabel, target, grub):
             entry.get_label_opt(),
             loopdev))
 
-        do('mount %s %s' % (loopdev, os.path.join(target, "imagemnt")))
+        mount_path = Path(target, "imagemnt")
+        do('mount %s %s' % (loopdev, mount_path))
+
+        for subvolume in entry.subvolumes:
+            subvolume_path = Path(mount_path, subvolume.name)
+            do('mkdir --parents %s' % (subvolume_path.parent))
+            do('btrfs subvolume create %s' % (subvolume_path))
 
         try:
             do('cp -a "%s/." "%s/"' %
                (os.path.join(target, "filesystems", entry.id),
-                os.path.join(target, "imagemnt")),
+                mount_path),
                allow_fail=True)
         finally:
             do('umount %s' % loopdev)

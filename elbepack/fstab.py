@@ -109,6 +109,11 @@ class hdpart:
         return loopdev.decode().rstrip('\n')
 
 
+class BtrfsSubvolume:
+    def __init__(self, xml):
+        self.name = xml.text("name")
+
+
 class fstabentry(hdpart):
 
     # pylint: disable=too-many-instance-attributes
@@ -131,6 +136,11 @@ class fstabentry(hdpart):
             self.mkfsopt = entry.text("fs/mkfs", default="")
             self.passno = entry.text("fs/passno", default="0")
             self.tune = entry.text("fs/tune2fs", default=None)
+
+            self.subvolumes = []
+            if self.fstype == "btrfs":
+                for subvolume in entry.node("fs/subvolumes"):
+                    self.subvolumes.append(BtrfsSubvolume(subvolume))
 
         self.id = str(fsid)
 
