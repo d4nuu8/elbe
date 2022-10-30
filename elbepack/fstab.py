@@ -132,6 +132,11 @@ class fstabentry(hdpart):
             self.passno = entry.text("fs/passno", default="0")
             self.tune = entry.text("fs/tune2fs", default=None)
 
+            self.subvolumes = []
+            if self.fstype == "btrfs":
+                for subvolume in entry.node("fs/subvolumes"):
+                    self.subvolumes.append(subvolume.text("name"))
+
         self.id = str(fsid)
 
     def get_str(self):
