@@ -37,7 +37,7 @@ Submitting Patches
   https://github.com/linutronix/elbe
 * Contributions must be certified as given in https://developercertificate.org.
   Please add a "Signed-off-by" tag to the commit.
-* Please note that we currently target Python 3.6+ before sending any source code.
+* Please note that we currently target Python 3.13+ before sending any source code.
 * Note that a moderator approval is needed when you send the patches to the
   mailing list without being subscribed. This approval is available via a
   confirmation link that you will receive once an e-mail is sent to the mailing
