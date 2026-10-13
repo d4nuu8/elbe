@@ -1044,6 +1044,21 @@ SPDX-FileCopyrightText: Linutronix GmbH
           </documentation>
         </annotation>
       </element>
+      <element name="skip-initramfs" minOccurs="0" maxOccurs="1">
+        <annotation>
+          <documentation>
+            Skip automatic initramfs generation by initramfs-tools, dracut,
+            and tiny-initramfs during package installation. Only their
+            installation entry points are suppressed; direct calls to
+            low-level generators such as mkinitramfs and mktirfs are not.
+            The initramfs tools are restored before target finetuning and
+            retain their normal behavior in the installed system. Use this
+            only when finetuning creates the required initramfs explicitly
+            or the target does not need a generated initramfs.
+          </documentation>
+        </annotation>
+        <complexType/>
+      </element>
       <element name="package" type="rfs:package" minOccurs="0" maxOccurs="1">
         <annotation>
           <documentation>

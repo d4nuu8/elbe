@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2014-2018 Linutronix GmbH
 
 
+import contextlib
 import datetime
 import glob
 import io
@@ -29,6 +30,7 @@ from elbepack.efilesystem import TargetFs, extract_target
 from elbepack.elbexml import ElbeXML, NoInitvmNode, ValidationError
 from elbepack.filesystem import size_to_int
 from elbepack.finetuning import do_prj_finetuning
+from elbepack.initramfs import disable_initramfs_generation
 from elbepack.log import validation
 from elbepack.paths import SOURCE_XML
 from elbepack.pbuilder import (
@@ -1077,11 +1079,17 @@ class ElbeProject:
             # The package installation below may want to manage resolv.conf.
             target.rfs.end_excursion('/etc/resolv.conf')
 
-            try:
-                self.get_rpcaptcache(env=target).commit()
-            except SystemError as e:
-                logging.exception('Commiting changes failed')
-                raise AptCacheCommitError(str(e))
+            initramfs_policy = (
+                disable_initramfs_generation(target.path)
+                if self.xml.has('target/skip-initramfs')
+                else contextlib.nullcontext()
+            )
+            with initramfs_policy:
+                try:
+                    self.get_rpcaptcache(env=target).commit()
+                except SystemError as e:
+                    logging.exception('Commiting changes failed')
+                    raise AptCacheCommitError(str(e))
 
     def gen_licenses(self, rfs, env, pkg_list):
 
